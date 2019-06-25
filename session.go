@@ -217,3 +217,10 @@ func (s *Session) MustGet(key string) interface{} {
 func (s *Session) IsClosed() bool {
 	return s.closed()
 }
+
+// SetMaxMessageSize sets the maximum size a message can be. The Session
+// inherits its default size from Melody's MaxMessageSize, but this
+// allows us to override that limit on a per-session basis
+func (s *Session) SetMaxMessageSize(maxbytes int64) {
+	s.conn.SetReadLimit(maxbytes)
+}
