@@ -4,6 +4,8 @@
 [![Coverage Status](https://img.shields.io/coveralls/olahol/melody.svg?style=flat)](https://coveralls.io/r/olahol/melody)
 [![GoDoc](https://godoc.org/github.com/olahol/melody?status.svg)](https://godoc.org/github.com/olahol/melody)
 
+> :warning: This is a FORK. It was created to support concurrent session keys and Go Modules.
+
 > :notes: Minimalist websocket framework for Go.
 
 Melody is websocket framework based on [github.com/gorilla/websocket](https://github.com/gorilla/websocket)
@@ -19,7 +21,7 @@ your way so you can write real-time apps. Features include:
 ## Install
 
 ```bash
-go get gopkg.in/olahol/melody.v1
+go get github.com/gabstv/melody
 ```
 
 ## [Example: chat](https://github.com/olahol/melody/tree/master/examples/chat)
@@ -32,7 +34,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gopkg.in/olahol/melody.v1"
+	"github.com/gabstv/melody"
 	"net/http"
 )
 
@@ -64,7 +66,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/engine/standard"
 	"github.com/labstack/echo/middleware"
-	"gopkg.in/olahol/melody.v1"
+	"github.com/gabstv/melody"
 	"net/http"
 )
 
@@ -102,7 +104,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gopkg.in/olahol/melody.v1"
+	"github.com/gabstv/melody"
 	"net/http"
 	"strconv"
 	"strings"
@@ -164,7 +166,7 @@ func main() {
 
 ### [More examples](https://github.com/olahol/melody/tree/master/examples)
 
-## [Documentation](https://godoc.org/github.com/olahol/melody)
+## [Documentation](https://godoc.org/github.com/gabstv/melody)
 
 ## Contributors
 
