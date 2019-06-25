@@ -208,6 +208,18 @@ func (s *Session) Get(key string) (value interface{}, exists bool) {
 	return
 }
 
+// Delete deletes the key and value from the map if
+// it exists. If not, Delete is a NOOP
+func (s *Session) Delete(key string) {
+	s.rwmutex.Lock()
+	defer s.rwmutex.Unlock()
+	if s.keys == nil {
+		return
+	}
+
+	delete(s.keys, key)
+}
+
 // MustGet returns the value for the given key if it exists, otherwise it panics.
 func (s *Session) MustGet(key string) interface{} {
 	s.rwmutex.RLock()
