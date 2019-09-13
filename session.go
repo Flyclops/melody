@@ -2,6 +2,7 @@ package melody
 
 import (
 	"errors"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -289,4 +290,14 @@ func (s *Session) IsClosed() bool {
 // allows us to override that limit on a per-session basis
 func (s *Session) SetMaxMessageSize(maxbytes int64) {
 	s.conn.SetReadLimit(maxbytes)
+}
+
+// LocalAddr returns the local addr of the connection.
+func (s *Session) LocalAddr() net.Addr {
+	return s.conn.LocalAddr()
+}
+
+// RemoteAddr returns the remote addr of the connection.
+func (s *Session) RemoteAddr() net.Addr {
+	return s.conn.RemoteAddr()
 }
