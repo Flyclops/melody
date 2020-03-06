@@ -2,6 +2,7 @@ package melody
 
 import (
 	"errors"
+	"log"
 	"net"
 	"net/http"
 	"sync"
@@ -23,6 +24,7 @@ type Session struct {
 
 func (s *Session) writeMessage(message *envelope) {
 	if s.closed() {
+		log.Println("MELODY: Tried to write to a closed session")
 		s.melody.errorHandler(s, errors.New("tried to write to closed a session"))
 		return
 	}
@@ -30,19 +32,21 @@ func (s *Session) writeMessage(message *envelope) {
 	select {
 	case s.output <- message:
 	default:
+		log.Println("MELODY: Session message buffers are full")
 		s.melody.errorHandler(s, errors.New("session message buffer is full"))
 	}
 }
 
 func (s *Session) writeRaw(message *envelope) error {
 	if s.closed() {
+		log.Println("MELODY: Tried to write to a closed session")
 		return errors.New("tried to write to a closed session")
 	}
 
 	s.conn.SetWriteDeadline(time.Now().Add(s.melody.Config.WriteWait))
 	err := s.conn.WriteMessage(message.t, message.msg)
-
 	if err != nil {
+		log.Printf("MELODY: WS error: %s\n", err.Error())
 		return err
 	}
 
@@ -85,6 +89,7 @@ loop:
 			err := s.writeRaw(msg)
 
 			if err != nil {
+				log.Println("MELODY: Write pump error: ", err.Error())
 				s.melody.errorHandler(s, err)
 				break loop
 			}
@@ -118,6 +123,7 @@ func (s *Session) readPump() {
 
 	if s.melody.closeHandler != nil {
 		s.conn.SetCloseHandler(func(code int, text string) error {
+			log.Println("MELODY: Close handler from read pump: ", code, text)
 			return s.melody.closeHandler(s, code, text)
 		})
 	}
@@ -126,6 +132,7 @@ func (s *Session) readPump() {
 		t, message, err := s.conn.ReadMessage()
 
 		if err != nil {
+			log.Println("MELODY: Error in read pump: ", err.Error())
 			s.melody.errorHandler(s, err)
 			break
 		}
@@ -143,6 +150,7 @@ func (s *Session) readPump() {
 // Write writes message to session.
 func (s *Session) Write(msg []byte) error {
 	if s.closed() {
+		log.Println("MELODY: attempt to write to closed session")
 		return errors.New("session is closed")
 	}
 
@@ -154,6 +162,7 @@ func (s *Session) Write(msg []byte) error {
 // WriteBinary writes a binary message to session.
 func (s *Session) WriteBinary(msg []byte) error {
 	if s.closed() {
+		log.Println("MELODY: attempt to write binary to closed session")
 		return errors.New("session is closed")
 	}
 
